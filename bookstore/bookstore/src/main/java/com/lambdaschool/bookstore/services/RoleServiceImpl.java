@@ -62,12 +62,8 @@ public class RoleServiceImpl implements RoleService
 
         if (role.getUserRoles().size() > 0)
         {
-            // with so many relationships happening, I decided to go
-            // with old school queries
-            // delete the old ones
             rolerepos.deleteUserRolesByRoleId(currentRole.getRoleid());
-
-            // add the new ones
+            
             for (UserRoles ur : role.getUserRoles())
             {
                 rolerepos.insertUserRoles(ur.getUser().getUserid(), id);
