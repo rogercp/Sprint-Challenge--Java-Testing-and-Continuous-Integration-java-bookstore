@@ -24,7 +24,7 @@ public class Book extends Auditable
 
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "written",
+    @JoinTable(name = "wrote",
             joinColumns = {@JoinColumn(name = "bookid")},
             inverseJoinColumns = {@JoinColumn(name = "authorid")})
     @JsonIgnoreProperties("books")

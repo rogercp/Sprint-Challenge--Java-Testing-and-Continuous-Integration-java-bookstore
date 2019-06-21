@@ -45,9 +45,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter
                 "/**/*.js"                 // general web
         )
                 .permitAll()
-                .antMatchers("/books/**","/authors/**").hasAnyRole("USER")
+                .antMatchers("/books","/authors").authenticated()
                 .antMatchers("/data/**").hasAnyRole("ADMIN", "USER", "DATA")
-                .antMatchers("/actuator/**","/roles").hasAnyRole("ADMIN","USER")
+                .antMatchers("/actuator/**","/roles","/**").hasAnyRole("ADMIN","USER")
                 .and()
                 .exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
 

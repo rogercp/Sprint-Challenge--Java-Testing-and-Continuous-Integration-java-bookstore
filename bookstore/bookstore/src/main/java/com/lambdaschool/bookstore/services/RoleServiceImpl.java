@@ -1,13 +1,13 @@
 package com.lambdaschool.bookstore.services;
 
-
+import com.lambdaschool.bookstore.exceptions.ResourceNotFoundException;
 import com.lambdaschool.bookstore.model.Role;
+import com.lambdaschool.bookstore.model.UserRoles;
 import com.lambdaschool.bookstore.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
 public class RoleServiceImpl implements RoleService
 {
     @Autowired
-    RoleRepository rolerepos;
+    private RoleRepository rolerepos;
 
     @Override
     public List<Role> findAll()
@@ -29,14 +29,14 @@ public class RoleServiceImpl implements RoleService
     @Override
     public Role findRoleById(long id)
     {
-        return rolerepos.findById(id).orElseThrow(() -> new EntityNotFoundException(Long.toString(id)));
+        return rolerepos.findById(id).orElseThrow(() -> new ResourceNotFoundException(Long.toString(id)));
     }
 
 
     @Override
     public void delete(long id)
     {
-        rolerepos.findById(id).orElseThrow(() -> new EntityNotFoundException(Long.toString(id)));
+        rolerepos.findById(id).orElseThrow(() -> new ResourceNotFoundException(Long.toString(id)));
         rolerepos.deleteById(id);
     }
 
@@ -46,5 +46,48 @@ public class RoleServiceImpl implements RoleService
     public Role save(Role role)
     {
         return rolerepos.save(role);
+    }
+
+    @Transactional
+    @Override
+    public Role update(Role role, long id)
+    {
+        Role currentRole = rolerepos.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Long.toString(id)));
+
+        if (role.getName() != null)
+        {
+            currentRole.setName((role.getName()));
+        }
+
+        if (role.getUserRoles().size() > 0)
+        {
+            // with so many relationships happening, I decided to go
+            // with old school queries
+            // delete the old ones
+            rolerepos.deleteUserRolesByRoleId(currentRole.getRoleid());
+
+            // add the new ones
+            for (UserRoles ur : role.getUserRoles())
+            {
+                rolerepos.insertUserRoles(ur.getUser().getUserid(), id);
+            }
+        }
+
+        return rolerepos.save(currentRole);
+    }
+
+    @Transactional
+    @Override
+    public void saveUserRole(long userid, long roleid)
+    {
+        rolerepos.insertUserRoles(userid, roleid);
+    }
+
+    @Transactional
+    @Override
+    public void deleteUserRole(long userid, long roleid)
+    {
+        rolerepos.deleteUserRoles(userid, roleid);
     }
 }

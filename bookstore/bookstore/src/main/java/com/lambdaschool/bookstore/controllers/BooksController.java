@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/books")
 public class BooksController
 {
     @Autowired
@@ -96,7 +97,6 @@ public class BooksController
         bookService.update(updateBook, id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 
 
 
