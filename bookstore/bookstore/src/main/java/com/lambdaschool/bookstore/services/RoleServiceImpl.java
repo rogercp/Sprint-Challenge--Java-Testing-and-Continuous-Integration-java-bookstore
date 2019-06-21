@@ -63,7 +63,7 @@ public class RoleServiceImpl implements RoleService
         if (role.getUserRoles().size() > 0)
         {
             rolerepos.deleteUserRolesByRoleId(currentRole.getRoleid());
-            
+
             for (UserRoles ur : role.getUserRoles())
             {
                 rolerepos.insertUserRoles(ur.getUser().getUserid(), id);
