@@ -4,6 +4,7 @@ package com.lambdaschool.bookstore.services;
 import com.lambdaschool.bookstore.model.Book;
 import com.lambdaschool.bookstore.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,10 +19,10 @@ public class BookServiceImpl implements BookService
     private BookRepository bookrepo;
 
     @Override
-    public List<Book> findAll()
+    public List<Book> findAll(Pageable pageable)
     {
         List<Book> list= new ArrayList<>();
-        bookrepo.findAll().iterator().forEachRemaining(list::add);
+        bookrepo.findAll(pageable).iterator().forEachRemaining(list::add);
         return list;
     }
 
@@ -65,6 +66,6 @@ public class BookServiceImpl implements BookService
             throw new EntityNotFoundException(Long.toString(id));
         }
     }
-    
+
 
 }
