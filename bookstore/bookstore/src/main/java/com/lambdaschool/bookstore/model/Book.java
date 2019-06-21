@@ -21,10 +21,10 @@ public class Book extends Auditable
     private String ISBN;
 
     private int copy;
-    
+
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "wrote",
+    @JoinTable(name = "written",
             joinColumns = {@JoinColumn(name = "bookid")},
             inverseJoinColumns = {@JoinColumn(name = "authorid")})
     @JsonIgnoreProperties("books")
